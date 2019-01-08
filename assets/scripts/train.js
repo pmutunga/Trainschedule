@@ -128,8 +128,10 @@ database.ref().on("child_added", function(childSnapshot) {
 
    // Next Train
    nextArrival = moment().add(minutesAway, "minutes");
-   nexTrain = moment(nextArrival).format("hh:mm a"); //Why does this not work? console.log("nextTrain")
+  /* nexTrain = moment(nextArrival).format("hh:mm a"); //Why does this not work? console.log("nextTrain")*/
+  /* nexTrain = nextArrival !== undefined && moment(nextArrival); //Why does this not work? console.log("nextTrain")*/
    console.log("Next Train: " + moment(nextArrival).format("hh:mm a"));
+   console.log("Next Train is " +  nextTrain);
 
 
 
@@ -164,4 +166,28 @@ function clearForm(){
 }
 
 
+//update "minutes to arrival" and "next train time" text once every minute. 
+
+ //Add Firebase authentication
  
+ // FirebaseUI config.
+ var uiConfig = {
+  signInSuccessUrl: 'index.html',
+  signInOptions: [
+    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+  ],
+  // tosUrl and privacyPolicyUrl accept either url string or a callback
+  // function.
+  // Terms of service url/callback.
+  tosUrl: 'users.html',
+  // Privacy policy url/callback.
+  privacyPolicyUrl: function() {
+    window.location.assign('users.html');
+  }
+};
+
+// Initialize the FirebaseUI Widget using Firebase.
+var ui = new firebaseui.auth.AuthUI(firebase.auth());
+// The start method will wait until the DOM is loaded.
+ui.start('#firebaseui-auth-container', uiConfig);

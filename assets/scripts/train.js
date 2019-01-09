@@ -17,7 +17,10 @@ var trainFirsttime;
 var trainFreq;
 var nextTrain;
 var minutesAway;
-
+var trainfirstTimeConverted;
+var currentTime;
+var diffTime; //Difference between trainFirsttime and current time
+var tRemainder; // Time apart (remainder)
  
  //2. Initiatilize firebase
 var config= {
@@ -76,7 +79,7 @@ var database = firebase.database();
 
     //Update firebase database with new values
 
-      // Uploads employee data to the database
+      // Uploads train data to the database
   database.ref().push(newTrain);
 
  console.log("database updated");
@@ -93,7 +96,6 @@ database.ref().on("child_added", function(childSnapshot) {
   // Assign variables values from firebase database
 
 
-
   trainName = childSnapshot.val().name;
   trainDestination = childSnapshot.val().destination;
   trainFirsttime = childSnapshot.val().start;
@@ -105,35 +107,9 @@ database.ref().on("child_added", function(childSnapshot) {
   console.log(trainFirsttime);
   console.log(trainFreq);
 
+ //Calculate Next arrival time and minutes away
 
-  // First Time (pushed back 1 year to make sure it comes before current time)
-    var trainfirstTimeConverted = moment(trainFirsttime, "HH:mm").subtract(1, "years");
-    console.log(trainfirstTimeConverted);
-
-  // Current Time
-    var currentTime = moment();
-    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
-
-    // Difference between the times
-    var diffTime = moment().diff(moment(trainfirstTimeConverted), "minutes");
-    console.log("DIFFERENCE IN TIME: " + diffTime);
-
-    // Time apart (remainder)
-    var tRemainder = diffTime % trainFreq;
-    console.log(tRemainder);
-    
-    // Minutes away
-    minutesAway = trainFreq - tRemainder;
-    console.log("Minutes away: " + minutesAway);
-
-   // Next Train
-   nextArrival = moment().add(minutesAway, "minutes");
-  /* nexTrain = moment(nextArrival).format("hh:mm a"); //Why does this not work? console.log("nextTrain")*/
-  /* nexTrain = nextArrival !== undefined && moment(nextArrival); //Why does this not work? console.log("nextTrain")*/
-   console.log("Next Train: " + moment(nextArrival).format("hh:mm a"));
-   console.log("Next Train is " +  nextTrain);
-
-
+  timeCalc();
 
   // Create the new row and append new train info to table
     updateSchedule();
@@ -166,8 +142,43 @@ function clearForm(){
 }
 
 
+
+
+//calculate time 
+
+function timeCalc(){
+  // First Time (pushed back 1 year to make sure it comes before current time)
+  trainfirstTimeConverted = moment(trainFirsttime, "HH:mm").subtract(1, "years");
+  console.log(trainfirstTimeConverted);
+
+// Current Time
+  currentTime  = moment();
+  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+  // Difference between the times
+  diffTime = moment().diff(moment(trainfirstTimeConverted), "minutes");
+  console.log("DIFFERENCE IN TIME: " + diffTime);
+
+  // Time apart (remainder)
+  tRemainder = diffTime % trainFreq;
+  console.log(tRemainder);
+  
+  // Minutes away
+  minutesAway = trainFreq - tRemainder;
+  console.log("Minutes away: " + minutesAway);
+
+ // Next Train
+ nextArrival = moment().add(minutesAway, "minutes");
+/* nexTrain = moment(nextArrival).format("hh:mm a"); //Why does this not work? console.log("nextTrain")*/
+/* nexTrain = nextArrival !== undefined && moment(nextArrival); //Why does this not work? console.log("nextTrain")*/
+ console.log("Next Train: " + moment(nextArrival).format("hh:mm a"));
+ console.log("Next Train is " +  nextTrain);
+}
+
+
 //update "minutes to arrival" and "next train time" text once every minute. 
 
+ 
  //Add Firebase authentication
  
  // FirebaseUI config.

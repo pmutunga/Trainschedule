@@ -21,6 +21,8 @@ var trainfirstTimeConverted;
 var currentTime;
 var diffTime; //Difference between trainFirsttime and current time
 var tRemainder; // Time apart (remainder)
+var trainEdit;
+var trainDelete;
  
  //2. Initiatilize firebase
 var config= {
@@ -35,6 +37,18 @@ var config= {
 firebase.initializeApp(config);
 
 var database = firebase.database();
+
+
+//Run Time  
+
+setInterval(function(startTime) {
+  $("#time-now").html(moment().format('MMMM Do YYYY, h:mm:ss a'))
+}, 1000);
+
+$("#train-times").hide();
+$("#addtrain").hide();
+$("#loader").hide();
+
 
 
   //3. Add click event listener to submit button
@@ -100,6 +114,7 @@ database.ref().on("child_added", function(childSnapshot) {
   trainDestination = childSnapshot.val().destination;
   trainFirsttime = childSnapshot.val().start;
   trainFreq = childSnapshot.val().frequency;
+  
 
   // Train Info
   console.log(trainName);
@@ -120,6 +135,7 @@ database.ref().on("child_added", function(childSnapshot) {
 
 function updateSchedule(){
 
+  
   $("table > tbody").append(`
             <tr>
                 <td>${trainName}</td>
@@ -127,6 +143,8 @@ function updateSchedule(){
                 <td>${trainFreq}</td>
                 <td>${moment(nextArrival).format("hh:mm a")}</td>
                 <td>${minutesAway}</td>
+                <td><i class="far fa-edit" id="train-edit"></i> <i class="far fa-trash-alt" id="train-delete"></i> </td>
+               
             </tr>    
             `);
 }
@@ -141,8 +159,26 @@ function clearForm(){
 
 }
 
+// Get data from firebase
+
+function gettraindata(fb) {
+  console.log(fb.val());
+
+  // Assign variables values from firebase database
 
 
+  trainName = fb.val().name;
+  trainDestination = fbo.val().destination;
+  trainFirsttime = fb.val().start;
+  trainFreq = fb.val().frequency;
+
+  // Train Info
+  console.log(trainName);
+  console.log(trainDestination);
+  console.log(trainFirsttime);
+  console.log(trainFreq);
+
+}
 
 //calculate time 
 
@@ -180,25 +216,69 @@ function timeCalc(){
 
  
  //Add Firebase authentication
- 
- // FirebaseUI config.
- var uiConfig = {
-  signInSuccessUrl: 'index.html',
-  signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
-  ],
-  // tosUrl and privacyPolicyUrl accept either url string or a callback
-  // function.
-  // Terms of service url/callback.
-  tosUrl: 'users.html',
-  // Privacy policy url/callback.
-  privacyPolicyUrl: function() {
-    window.location.assign('users.html');
-  }
-};
 
-// Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseui.auth.AuthUI(firebase.auth());
-// The start method will wait until the DOM is loaded.
-ui.start('#firebaseui-auth-container', uiConfig);
+
+var uiConfig = {
+        callbacks: {
+          signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+            var user = authResult.user;
+            var credential = authResult.credential;
+            var isNewUser = authResult.additionalUserInfo.isNewUser;
+            var providerId = authResult.additionalUserInfo.providerId;
+            var operationType = authResult.operationType;
+            // Do something with the returned AuthResult.
+            // Return type determines whether we continue the redirect automatically
+            // or whether we leave that to developer to handle.
+            return true;
+          },
+          signInFailure: function(error) {
+            // Some unrecoverable error occurred during sign-in.
+            // Return a promise when error handling is completed and FirebaseUI
+            // will reset, clearing any UI. This commonly occurs for error code
+            // 'firebaseui/anonymous-upgrade-merge-conflict' when merge conflict
+            // occurs. Check below for more details on this.
+            return handleUIError(error);
+          },
+          uiShown: function() {
+            // The widget is rendered.
+            // Hide the loader.
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("train-times").style.display = "visible";
+            document.getElementById("addtrain").style.display = "visible";
+            $("#train-times").show();
+            $("#addtrain").show();
+            $("#loader").hide();
+            $("#firebaseui-auth-container").hide();
+            $("#usernam").text(DisplayName);
+          }
+        },
+        credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM,
+        // Query parameter name for mode.
+        queryParameterForWidgetMode: 'mode',
+        // Query parameter name for sign in success url.
+        queryParameterForSignInSuccessUrl: 'signInSuccessUrl',
+        // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+        signInFlow: 'popup',
+        signInSuccessUrl: "index.html",
+        signInOptions: [
+          // Leave the lines as is for the providers you want to offer your users.
+                  {
+            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            // Whether the display name should be displayed in the Sign Up page.
+            requireDisplayName: true
+          },
+          
+          firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+        ],
+        
+      };
+
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      // The start method will wait until the DOM is loaded.
+      ui.start('#firebaseui-auth-container', uiConfig);
+
+      //Edit and Delete event listeners
+      $(document).on("click", ".fa-trash-alt", function(){
+        $(this).closest("tr").remove();
+        alert("delete button clicked");
+      });

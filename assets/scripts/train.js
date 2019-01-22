@@ -7,7 +7,9 @@
 // 4. Create a way to retrieve train schedule info from the train schedule firebase database.
 // 5. Create a way to calculate the next arrival time. Use difference between trainFirsttime and current time. Use moment.js to calculate and display nextArrival time in military time format and display in table.
 // 6. Calculate minutes away and display in table.
+// 7. Add authentication
 
+$(document).ready(function(){
 
 //1. define variables
 
@@ -43,11 +45,9 @@ var database = firebase.database();
 
 setInterval(function(startTime) {
   $("#time-now").html(moment().format('MMMM Do YYYY, h:mm:ss a'))
-}, 1000);
+  }, 1000);
 
-$("#train-times").hide();
-$("#addtrain").hide();
-$("#loader").hide();
+
 
 
 
@@ -65,10 +65,10 @@ $("#loader").hide();
     var newtrainFreq = $("#frequency-input").val().trim();
 
 
-    console.log("traininName is" + newtrainName);
-    console.log(" trainin desitnation is:" + newtrainDestination);
-    console.log("First train time is: " + newtrainFirsttime);
-    console.log("train frequency is: " + newtrainFreq);
+    // console.log("traininName is" + newtrainName);
+    // console.log(" trainin desitnation is:" + newtrainDestination);
+    // console.log("First train time is: " + newtrainFirsttime);
+    // console.log("train frequency is: " + newtrainFreq);
 
     // Create local "temporary" object for holding train data
 
@@ -85,11 +85,11 @@ $("#loader").hide();
     console.log("First train time is: " + newtrainFirsttimeMil);
 
   // Log everything to console for testing
-  console.log(newTrain.name);
-  console.log(newTrain.destination);
-  console.log(newTrain.start);
-  console.log(newTrain.frequency);
-  console.log(newTrain.dateAdded);
+  // console.log(newTrain.name);
+  // console.log(newTrain.destination);
+  // console.log(newTrain.start);
+  // console.log(newTrain.frequency);
+  // console.log(newTrain.dateAdded);
 
     //Update firebase database with new values
 
@@ -117,10 +117,10 @@ database.ref().on("child_added", function(childSnapshot) {
   
 
   // Train Info
-  console.log(trainName);
-  console.log(trainDestination);
-  console.log(trainFirsttime);
-  console.log(trainFreq);
+  // console.log(trainName);
+  // console.log(trainDestination);
+  // console.log(trainFirsttime);
+  // console.log(trainFreq);
 
  //Calculate Next arrival time and minutes away
 
@@ -143,8 +143,7 @@ function updateSchedule(){
                 <td>${trainFreq}</td>
                 <td>${moment(nextArrival).format("hh:mm a")}</td>
                 <td>${minutesAway}</td>
-                <td><i class="far fa-edit" id="train-edit"></i> <i class="far fa-trash-alt" id="train-delete"></i> </td>
-               
+            
             </tr>    
             `);
 }
@@ -162,7 +161,7 @@ function clearForm(){
 // Get data from firebase
 
 function gettraindata(fb) {
-  console.log(fb.val());
+  // console.log(fb.val());
 
   // Assign variables values from firebase database
 
@@ -173,10 +172,10 @@ function gettraindata(fb) {
   trainFreq = fb.val().frequency;
 
   // Train Info
-  console.log(trainName);
-  console.log(trainDestination);
-  console.log(trainFirsttime);
-  console.log(trainFreq);
+  // console.log(trainName);
+  // console.log(trainDestination);
+  // console.log(trainFirsttime);
+  // console.log(trainFreq);
 
 }
 
@@ -185,100 +184,124 @@ function gettraindata(fb) {
 function timeCalc(){
   // First Time (pushed back 1 year to make sure it comes before current time)
   trainfirstTimeConverted = moment(trainFirsttime, "HH:mm").subtract(1, "years");
-  console.log(trainfirstTimeConverted);
+  // console.log(trainfirstTimeConverted);
 
 // Current Time
   currentTime  = moment();
-  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+  // console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
 
   // Difference between the times
   diffTime = moment().diff(moment(trainfirstTimeConverted), "minutes");
-  console.log("DIFFERENCE IN TIME: " + diffTime);
+  // console.log("DIFFERENCE IN TIME: " + diffTime);
 
   // Time apart (remainder)
   tRemainder = diffTime % trainFreq;
-  console.log(tRemainder);
+  // console.log(tRemainder);
   
   // Minutes away
   minutesAway = trainFreq - tRemainder;
-  console.log("Minutes away: " + minutesAway);
+  // console.log("Minutes away: " + minutesAway);
 
  // Next Train
  nextArrival = moment().add(minutesAway, "minutes");
 /* nexTrain = moment(nextArrival).format("hh:mm a"); //Why does this not work? console.log("nextTrain")*/
 /* nexTrain = nextArrival !== undefined && moment(nextArrival); //Why does this not work? console.log("nextTrain")*/
- console.log("Next Train: " + moment(nextArrival).format("hh:mm a"));
- console.log("Next Train is " +  nextTrain);
+//  console.log("Next Train: " + moment(nextArrival).format("hh:mm a"));
+//  console.log("Next Train is " +  nextTrain);
 }
 
 
-//update "minutes to arrival" and "next train time" text once every minute. 
+//++++++++++++++++++Add firebase authentication
 
+const auth = firebase.auth();
+
+//++++++++++++++++++Add firebase authentication
+
+// Get all DOM elements
+
+$("#sign-in").click(function(){
+  $("#myModal").modal();
+});
+
+
+const signIn = document.getElementById("sign-in");
+const txtEmail = document.getElementById("txtEmail");
+const txtPassword = document.getElementById("txtPassword");
+const btnLogin = document.getElementById("btnLogin");
+const btnSignUp = document.getElementById("btnSignUp");
+const btnSignOut = document.getElementById("btnSignOut");
+
+
+//Attach click event to login, sign-up, forgot-password and log-out
+
+//Add Login event
+btnLogin.addEventListener("click", e => {
+
+    event.preventDefault();
+  //get email and pass
+    const email = txtEmail.value;
+    console.log(email);
+    const passWd = txtPassword.value;
+    console.log(passWd);
  
- //Add Firebase authentication
+ //sign in
+ const promise = auth.signInWithEmailAndPassword(email, passWd); //returns a promise
+
+promise.catch(e => console.log(e.message));
+
+});
+
+//Add Sign-Up
+
+btnSignUp.addEventListener("click", function(){
+console.log("you clicked sign up");
+
+  //get email and pass
+  const email = txtEmail.value;
+  console.log(email);
+  const passWd = txtPassword.value;
+  console.log(passWd);
+
+  //sign up
+ const promise = auth.createUserWithEmailAndPassword(email, passWd); //returns a promise
+
+ promise.catch(e => console.log(e.message));
+
+});
+
+//Add logout event listener
+btnSignOut.addEventListener("click", e=>{
+    firebase.auth().signOut();
+    btnSignOut.classList.add("hide");
+    signIn.classList.remove("hide");
+});
+
+//Forgot password: TO In Future
+
+// forgotpass.addEventListener("click", e=>{
+//     console.log("user forgot password");
+//     auth.sendPasswordResetEmail(email).then(function() {
+//         // Email sent.
+//       }).catch(function(error) {
+//         // An error happened.
+//       });
+// });
+
+//Add a realtime listener
+firebase.auth().onAuthStateChanged(firebaseUser =>{
+    if(firebaseUser){
+        console.log(firebaseUser);
+        btnSignOut.classList.remove("hide");
+        signIn.classList.add("hide");
+       } else{
+        console.log("user is not logged in");
+    }
+
+}); 
 
 
-var uiConfig = {
-        callbacks: {
-          signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-            var user = authResult.user;
-            var credential = authResult.credential;
-            var isNewUser = authResult.additionalUserInfo.isNewUser;
-            var providerId = authResult.additionalUserInfo.providerId;
-            var operationType = authResult.operationType;
-            // Do something with the returned AuthResult.
-            // Return type determines whether we continue the redirect automatically
-            // or whether we leave that to developer to handle.
-            return true;
-          },
-          signInFailure: function(error) {
-            // Some unrecoverable error occurred during sign-in.
-            // Return a promise when error handling is completed and FirebaseUI
-            // will reset, clearing any UI. This commonly occurs for error code
-            // 'firebaseui/anonymous-upgrade-merge-conflict' when merge conflict
-            // occurs. Check below for more details on this.
-            return handleUIError(error);
-          },
-          uiShown: function() {
-            // The widget is rendered.
-            // Hide the loader.
-            document.getElementById("loader").style.display = "none";
-            document.getElementById("train-times").style.display = "visible";
-            document.getElementById("addtrain").style.display = "visible";
-            $("#train-times").show();
-            $("#addtrain").show();
-            $("#loader").hide();
-            $("#firebaseui-auth-container").hide();
-            $("#usernam").text(DisplayName);
-          }
-        },
-        credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM,
-        // Query parameter name for mode.
-        queryParameterForWidgetMode: 'mode',
-        // Query parameter name for sign in success url.
-        queryParameterForSignInSuccessUrl: 'signInSuccessUrl',
-        // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-        signInFlow: 'popup',
-        signInSuccessUrl: "index.html",
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-                  {
-            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-            // Whether the display name should be displayed in the Sign Up page.
-            requireDisplayName: true
-          },
-          
-          firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
-        ],
-        
-      };
+//+++++++++++++End of Firebase authentication
+}); //end of document ready
 
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      // The start method will wait until the DOM is loaded.
-      ui.start('#firebaseui-auth-container', uiConfig);
 
-      //Edit and Delete event listeners
-      $(document).on("click", ".fa-trash-alt", function(){
-        $(this).closest("tr").remove();
-        alert("delete button clicked");
-      });
+    

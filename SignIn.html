@@ -1,0 +1,128 @@
+<!DOCTYPE html lang="en-us">
+
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Train Schedule</title>
+
+  <!-- reset css -->
+  <link rel="stylesheet" type="text/css" media="screen" href= "assets/css/reset.css" />
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  <!--Font Awesome-->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+
+  <!-- Firebase Reference -->
+ 
+  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-app.js"></script> <!--Need to include app in order to use auth-->
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-auth.js"></script> <!--Authentication-->
+  <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script> <!--dBase-->
+  <!--Firebase Authentication-->
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.1/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.1/firebaseui.css" />
+
+  <!-- Moment.js Reference -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+  <!-- css file -->
+
+  <link rel="stylesheet" type="text/css" media="screen" href= "assets/css/style.css" />
+ 
+
+</head>
+
+<body>
+
+  <!-- Train Schedule -->
+
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+            <strong><i class="fas fa-train"></i> Choo</strong>
+          </a>
+    
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <button type="button" id="sign-up" class="btn btn-primary">
+              <i class="fa fa-lock" aria-hidden="true"></i> LOGIN/CREATE ACCOUNT
+              </button>
+        </ul>
+        
+      </div>
+    </nav> -->
+
+  <nav class="navbar navbar-dark bg-primary">
+    <a class="navbar-brand" href="#"><strong><i class="fas fa-train"></i> Choo</strong></a>
+    <a class="nav-link active" href="index.html">Active</a>
+    <ul class="nav justify-content-right" >
+      <li class="nav-item" >
+        <a id = "sign-in" class="nav-link active" href="SignIn.html" style="color: white;"> <i class="fa fa-lock" aria-hidden="true"></i> Admin Login</a>
+      </li>  
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+          <button type="button" id="btnSignOut" class="btn btn-primary hide">
+            <i class="fa fa-lock" aria-hidden="true"></i> LOG OUT
+            </button>
+    </ul>
+          
+    </nav>
+  
+  
+  <div class="container"><!--container for main content area-->
+          <!-- Image and text -->
+
+     
+    <!-- Jumbotron -->
+    <div class="jumbotron" style="background-color: rgba(100, 162, 132, 0.62); color: white">
+      <h1 class="text-center">Anytime is Train Time</h1>
+      <h3 class="text-center">Log into your administrator account</h3>
+
+    </div>
+
+    <div class="container"> <!--MAIN CONTENT AREA-->
+
+      <div class="row">
+       
+        <div class="col" style = "background-color:rgba(228, 242, 252, 0.867)">
+          
+            <form id="admin-signin">
+                <div class="form-group">
+                  <input id="txtEmail" class="form-control" type="email" placeholder="example@domain.com">
+              </div>
+              <div class="form-group">
+                  <input id="txtPassword" class="form-control" type="password" placeholder="password">
+              </div>
+              
+              <div class="form-group">
+              <button id="btnLogin" class="btn btn-primary float-right" style="margin-right: 5px">Log in</button>
+              <button id="btnSignUp" class="btn btn-secondary float-right" style="margin-right: 5px">Create Account </button>
+              <br class="float-none">
+              </div>
+
+            </form>
+            <br>
+          <!-- <p style="text-align: right"><a id="forgot-password" href="#">Forgot password?</a></p> TO-DO: FUTURE-->
+        </div>
+
+        <div class="col">
+ 
+        </div>
+      </div>
+
+    </div> <!--END OF MAIN CONTENT AREA-->
+    
+
+  <!-- JavaScript -->
+  <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase.js"></script>
+  <script src="./assets/scripts/signIn.js"></script>
+
+</body>
+
+</html>

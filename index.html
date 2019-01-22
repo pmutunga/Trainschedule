@@ -4,6 +4,7 @@
 <head>
 
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Train Schedule</title>
 
   <!-- reset css -->
@@ -40,16 +41,42 @@
 <body>
 
   <!-- Train Schedule -->
-  <nav class="navbar navbar-dark bg-primary">
+
+  <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
       <a class="navbar-brand" href="#">
-        <strong><i class="fas fa-train"></i> Choo</strong>
-      </a>
-      <a>
-         <span id="username"></span>
-        </a>
+            <strong><i class="fas fa-train"></i> Choo</strong>
+          </a>
+    
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <button type="button" id="sign-up" class="btn btn-primary">
+              <i class="fa fa-lock" aria-hidden="true"></i> LOGIN/CREATE ACCOUNT
+              </button>
+        </ul>
+        
+      </div>
+    </nav> -->
+
+  <nav class="navbar navbar-dark bg-primary">
+    <a class="navbar-brand" href="#"><strong><i class="fas fa-train"></i> Choo</strong></a>
+    <ul class="nav justify-content-right" >
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <button type="button" id="sign-in" class="btn btn-primary">
+              <i class="fa fa-lock" aria-hidden="true"></i> Admin Login
+              </button>
+      </ul>
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <button type="button" id="btnSignOut" class="btn btn-primary hide">
+              <i class="fa fa-lock" aria-hidden="true"></i> LOG OUT
+              </button>
+      </ul>
     </nav>
-  </br>
-  <div class="container">
+  
+  
+  <div class="container"><!--container for main content area-->
           <!-- Image and text -->
 
      
@@ -57,9 +84,7 @@
     <div class="jumbotron" style="background-color: rgba(100, 162, 132, 0.62); color: white">
       <h1 class="text-center">Anytime is Train Time</h1>
       <h3 class="text-center" id="time-now"></h3>
-          <!-- Authentication -->
-      <div id="firebaseui-auth-container"></div> 
-      <div id="loader">Loading...</div>
+
     </div>
 
     <div class="row">
@@ -78,7 +103,6 @@
                   <th scope="col">Frequency(min)</th>
                   <th scope="col">Next Arrival</th>
                   <th scope="col">Minutes Away ($)</th>
-                  <th scope="col"><i class="fas fa-edit"></i></th>
                 </tr>
               </thead>
               <tbody>
@@ -88,6 +112,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Authentication -->
+
 
     <div class="row" id="addtrain">
       <div class="col">
@@ -123,9 +150,46 @@
     </div>
 
     
+<!-- Authentication Modal -->
+
+  
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header" style="padding:35px 50px;">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4><span class="glyphicon glyphicon-lock"></span>Close</h4>
+          </div>
+          <div class="modal-body" style="padding:40px 50px;">
+              <form id="admin-signin">
+                  <div class="form-group">
+                    <input id="txtEmail" class="form-control" type="email" placeholder="example@domain.com">
+                </div>
+                <div class="form-group">
+                    <input id="txtPassword" class="form-control" type="password" placeholder="password">
+                </div>
+                
+                <div class="form-group">
+                <button id="btnLogin" class="btn btn-primary float-right" style="margin-right: 5px">Log in</button>
+                <button id="btnSignUp" class="btn btn-secondary float-right" style="margin-right: 5px">Create Account </button>
+                <br class="float-none">
+                </div>
+  
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+          </div>
+        </div>
+        
+      </div>
+    </div> 
 
 
-  </div>
+  </div> <!--end of container for main content area-->
 
   <!-- JavaScript -->
   <script src="https://www.gstatic.com/firebasejs/5.7.1/firebase.js"></script>

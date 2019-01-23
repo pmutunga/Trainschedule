@@ -240,27 +240,29 @@ btnLogin.addEventListener("click", e => {
     event.preventDefault();
   //get email and pass
     const email = txtEmail.value;
-    console.log(email);
+    // console.log(email);
     const passWd = txtPassword.value;
-    console.log(passWd);
+    // console.log(passWd);
  
  //sign in
  const promise = auth.signInWithEmailAndPassword(email, passWd); //returns a promise
 
-promise.catch(e => console.log(e.message));
+// promise.catch(e => console.log(e.message));
 
 });
 
 //Add Sign-Up
 
 btnSignUp.addEventListener("click", function(){
+
+  event.preventDefault();
 console.log("you clicked sign up");
 
   //get email and pass
   const email = txtEmail.value;
-  console.log(email);
+  // console.log(email);
   const passWd = txtPassword.value;
-  console.log(passWd);
+  // console.log(passWd);
 
   //sign up
  const promise = auth.createUserWithEmailAndPassword(email, passWd); //returns a promise
@@ -293,8 +295,10 @@ firebase.auth().onAuthStateChanged(firebaseUser =>{
         console.log(firebaseUser);
         btnSignOut.classList.remove("hide");
         signIn.classList.add("hide");
+        $('#myModal').modal('hide');
        } else{
-        console.log("user is not logged in");
+        // console.log("user is not logged in");
+        signIn.classList.remove("hide");
     }
 
 }); 

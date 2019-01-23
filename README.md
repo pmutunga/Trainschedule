@@ -11,7 +11,7 @@ This is a simple train schedule application that incorporates Firebase to host a
 
 This app has the following features
   
-  * When adding trains, administrators can submit the following:
+  * When adding trains, administrators can submit the following information:
     
     * Train Name
     
@@ -27,13 +27,8 @@ This app has the following features
   
   
 
-### Bonus (Extra Challenges)
+### See how it works
 
-* "minutes to arrival" and "next train time" text are updated once every minute. 
-
-* An administrator can `update` and `remove` a train. They can change a train's Name, Destination and Arrival Time (and then, by relation, minutes to arrival).
-
-* Only users who log into the site with their Google or GitHub accounts can this site. 
-
+[Check it out]( https://pmutunga.github.io/Trainschedule/)
 
 
